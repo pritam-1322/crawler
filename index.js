@@ -10,7 +10,7 @@ const HEADERS = {
   'Accept-Language': 'en-US,en;q=0.9',
 };
 
-async function scrapeBing(query, pages = 5) {
+async function scrapeBing(query, pages = 10) {
   const domains = new Set();
 
   for (let i = 0; i < pages; i++) {
@@ -19,7 +19,7 @@ async function scrapeBing(query, pages = 5) {
       `https://www.bing.com/search?q=${encodeURIComponent(query)}` +
       `&first=${first}`;
 
-    console.log(`➡️  Fetching Bing page ${i + 1}`);
+    console.log(`Fetching page ${i + 1}`);
     try {
       const { data } = await axios.get(url, { headers: HEADERS, timeout: 15000 });
       const $ = cheerio.load(data);
@@ -36,12 +36,12 @@ async function scrapeBing(query, pages = 5) {
       /* polite pause */
       await new Promise(r => setTimeout(r, 1000 + Math.random() * 500));
     } catch (err) {
-      console.error('   🚫  Error:', err.message);
+      console.error('Error:', err.message);
     }
   }
 
   if (!domains.size) {
-    console.log('\n  No domains found – something went wrong.');
+    console.log('\n No domains found something went wrong.');
     return;
   }
 
@@ -54,7 +54,7 @@ async function scrapeBing(query, pages = 5) {
   }
 
   fs.writeFileSync('sites.txt', lines.join('\n'));
-  console.log(`\n🎉  Saved ${domains.size} unique domains.txt`);
+  console.log(`\n🎉  Saved ${domains.size} sites.txt`);
 }
 
 const query = process.argv.slice(2).join(' ') ;
